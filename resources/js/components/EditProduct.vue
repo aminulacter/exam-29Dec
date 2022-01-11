@@ -24,7 +24,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Media</h6>
                     </div>
                     <div class="card-body border">
-                        <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"   @vdropzone-success-multiple="afterUploadComplete"></vue-dropzone>
+                        <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
                     </div>
                 </div>
             </div>
@@ -110,10 +110,6 @@ export default {
         variants: {
             type: Array,
             required: true
-        },
-        temproute:{
-            type: String,
-            required: true
         }
     },
     data() {
@@ -130,29 +126,14 @@ export default {
             ],
             product_variant_prices: [],
             dropzoneOptions: {
-                url: this.temproute,
+                url: 'https://httpbin.org/post',
                 thumbnailWidth: 150,
                 maxFilesize: 0.5,
-                headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                 parallelUploads: 3,
-                 maxFiles: 3,
-
-                uploadMultiple: true,
+                headers: {"My-Awesome-Header": "header value"}
             }
         }
     },
     methods: {
-
-         afterUploadComplete: async function (file, response) {
-             if(response.status=='success')
-             {
-                  this.images = response.images
-                  console.log(response.message)
-             }
-
-            },
         // it will push a new object into product variant
         newVariant() {
             let all_variants = this.variants.map(el => el.id)
@@ -210,7 +191,6 @@ export default {
 
             axios.post('/product', product).then(response => {
                 console.log(response.data);
-                window.location.href =window.location.origin + "/product"
             }).catch(error => {
                 console.log(error);
             })
@@ -221,8 +201,7 @@ export default {
 
     },
     mounted() {
-        let baseUrl = window.location.origin
-        console.log(baseUrl);
+        console.log('Component mounted.')
     }
 }
 </script>
